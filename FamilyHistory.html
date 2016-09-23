@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1">
+
+    <title>Family History List</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<style>
+body
+{ 
+  background: url("tree-background.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+</style>
+</head>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<body ng-app="familyApp" ng-controller="familyCtrl">
+
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1 class="text-center">My Family History List</h1>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="page-header">
+            <form class="text-center" ng-submit="addToList()">
+                <input type="text" ng-model="family.person" size="50" placeholder="Person">
+                <input type="text" ng-model="family.father" size="50" placeholder="Father">
+                <input type="text" ng-model="family.mother" size="50" placeholder="Mother">
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></button>
+            </form>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="container-fluid" ng-repeat="x in familyList">
+        <input type="checkbox" ng-model="x.done"> <span class = "bg-primary" ng-bind="x.familyText"></span>
+    </div>
+
+    <div class="container-fluid">
+        <p><button class="btn btn-danger" ng-click="remove()"><span class="glyphicon glyphicon-trash"></span></button></p>
+    </div>
+
+
+    <script>
+
+var app = angular.module('familyApp', []);
+
+app.controller('familyCtrl', function($scope) 
+{
+    
+    valid_input = true;
+
+    $scope.familyList = [ { familyText : ["Joachim Absolon Kysely", " Rahat Paolino Kysely", " Rosalina Andrei Ellison"], done : false } ];
+
+    $scope.addToList = function() 
+    {
+        //Check for completely empty form:
+        if ($scope.family == undefined || 
+        ($scope.family.person == "" && $scope.family.father == "" && $scope.family.mother == "") || 
+        ($scope.family.person == "" && $scope.family.father == undefined && $scope.family.mother == undefined))
+        {
+            window.alert("You must have at least one valid entry!");
+        }
+
+        else
+        {
+            valid_input = true;
+
+            //Check for empty input fields:
+            if ($scope.family.person == undefined || $scope.family.person == "")
+            {
+                $scope.family.person = "Unknown Child";
+            }
+
+            if ($scope.family.father == undefined || $scope.family.father == "")
+            {
+                $scope.family.father = "Unknown Father";
+            }
+
+            if ($scope.family.mother == undefined || $scope.family.mother == "")
+            {
+                $scope.family.mother = "Unknown Mother";
+            }
+
+            //Adding to familyList object`s array:
+            $scope.familyList.push( { familyText : [$scope.family.person, " " + $scope.family.father, " " + $scope.family.mother], done : false } );
+            $scope.family = "";
+        }
+    };
+
+    $scope.remove = function() 
+    {
+        var oldList = $scope.familyList;
+        $scope.familyList = [];
+        angular.forEach(oldList, function(x) 
+        {
+            if (!x.done) $scope.familyList.push(x);
+        });
+    };
+});
+
+</script>
+
+</body>
+
+</html>
